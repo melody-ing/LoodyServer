@@ -17,23 +17,24 @@ const db = admin.firestore();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-const defaultPrompt = (
-  uuid,
-  owner,
-  ownerName,
-  theme
-) => `Please generate three questions.
-The theme of the question bank is: ${theme}
+const defaultPrompt = ({
+  queryQuantity,
+  paramsUUID,
+  queryOwner,
+  queryOwnerName,
+  queryTheme,
+}) => `Please generate ${queryQuantity} questions.
+The theme of the question bank is: ${queryTheme}
 
 If the question bank is in Chinese, please use Traditional Chinese instead of Simplified Chinese.
 Please respond in JSON.
 The format is as follows:
 {
   "editTime": "",// don't filled in anything
-  "id": ${uuid}, // don't change the id that I gave you
+  "id": ${paramsUUID}, // don't change the id that I gave you
   "name": "Test question bank", // generate a question name
-  "owner": ${owner}, // don't change the owner that I gave you
-  "ownerName": ${ownerName}, // don't change the ownerName that I gave you
+  "owner": ${queryOwner}, // don't change the owner that I gave you
+  "ownerName": ${queryOwnerName}, // don't change the ownerName that I gave you
   "questions": [
     {
       // multiple choice questions
@@ -43,7 +44,7 @@ The format is as follows:
       "media": "",
       "options": ["", "", "", ""], //add four options
       "timeLimit": 10, // only 10, 20, 30, 60, 90, 120, 180
-      "title": "How are you", //question
+      "title": "How are you", //question (Don't over 40 letters)
       "type": "mc"
     },
     {
@@ -54,7 +55,7 @@ The format is as follows:
       "media": "",
       "options": ["T", "F"],
       "timeLimit": 10, // only 10, 20, 30, 60, 90, 120, 180
-      "title": "How are you", //question
+      "title": "How are you", //question (Don't over 40 letters)
       "type": "tf"
     },
     {
@@ -65,7 +66,7 @@ The format is as follows:
       "media": "",
       "options": ["good"], // put answer string in array[0]
       "timeLimit": 10, // only 10, 20, 30, 60, 90, 120, 180
-      "title": "How are you?", //question
+      "title": "How are you?", //question (Don't over 40 letters)
       "type": "sa"
     }
   ]
@@ -86,16 +87,18 @@ app.get("/openai/:uuid", async (req, res) => {
     const queryOwner = req.query.owner;
     const queryOwnerName = req.query.ownerName;
     const queryTheme = req.query.theme;
+    const queryQuantity = req.query.quantity;
     const completion = await openai.chat.completions.create({
       messages: [
         {
           role: "system",
-          content: defaultPrompt(
+          content: defaultPrompt({
+            queryQuantity,
             paramsUUID,
             queryOwner,
             queryOwnerName,
-            queryTheme
-          ),
+            queryTheme,
+          }),
         },
       ],
       model: "gpt-4",
@@ -103,7 +106,13 @@ app.get("/openai/:uuid", async (req, res) => {
     const docRef = db.collection("qbank").doc(paramsUUID);
     await docRef.set(JSON.parse(completion.choices[0].message.content));
     console.log(completion.choices[0].message.content);
-    console.log(paramsUUID, queryOwner, queryOwnerName, queryTheme);
+    console.log(
+      queryQuantity,
+      paramsUUID,
+      queryOwner,
+      queryOwnerName,
+      queryTheme
+    );
     res.status(200).json({ message: completion.choices[0].message.content });
   } catch (err) {
     res.status(500).json({ error: err.message });
