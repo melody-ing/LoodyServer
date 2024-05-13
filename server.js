@@ -29,11 +29,11 @@ If the question bank is in Chinese, please use Traditional Chinese instead of Si
 Please respond in JSON.
 The format is as follows:
 {
-  "editTime": "",
-  "id": ${uuid},
+  "editTime": "",// don't filled in anything
+  "id": ${uuid}, // don't change the id that I gave you
   "name": "Test question bank", // generate a question name
-  "owner": ${owner},
-  "ownerName": ${ownerName},
+  "owner": ${owner}, // don't change the owner that I gave you
+  "ownerName": ${ownerName}, // don't change the ownerName that I gave you
   "questions": [
     {
       // multiple choice questions
