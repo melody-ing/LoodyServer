@@ -1,21 +1,19 @@
 import express from "express";
 import { OpenAI } from "openai";
 import cors from "cors";
-import { initializeApp, applicationDefault, cert } from "firebase-admin/app";
-import {
-  getFirestore,
-  Timestamp,
-  FieldValue,
-  Filter,
-} from "firebase-admin/firestore";
+import "dotenv/config";
+import admin from "firebase-admin";
 
 const app = express();
 const port = 3000;
+app.use(express.json());
 
-initializeApp({
-  credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY)),
+const serviceAccount = JSON.parse(process.env.FIREBASE_ADMIN_KEY);
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
 });
-const db = getFirestore();
+const db = admin.firestore();
 
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
