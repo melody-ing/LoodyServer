@@ -1,2 +1,3 @@
 serverAccountKey.json
 /node_modules/
+.env

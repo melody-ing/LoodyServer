@@ -8,13 +8,12 @@ import {
   FieldValue,
   Filter,
 } from "firebase-admin/firestore";
-import serviceAccount from "./serverAccountKey.json" assert { type: "json" };
 
 const app = express();
 const port = 3000;
 
 initializeApp({
-  credential: cert(serviceAccount),
+  credential: cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY)),
 });
 const db = getFirestore();
 
