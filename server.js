@@ -26,7 +26,6 @@ const defaultPrompt = ({
 }) => `Please generate ${queryQuantity} ${(queryQuantity) =>
   queryQuantity === "1" ? "question" : "questions"}.
 The theme of the question bank is: ${queryTheme}
-
 If the question bank is in Chinese, please use Traditional Chinese instead of Simplified Chinese.
 Please respond in JSON.
 The format is as follows:
@@ -62,10 +61,10 @@ The format is as follows:
     {
       // short answer questions
       "isDone": true,
-      "answer": "good", // the answer in string
+      "answer": "good", // The answer in string. If the answer is english, please make it all uppercase.
       "id": "1b50a28f-74e6-4962-9fb5-db1e9da450be", // new uuid
       "media": "",
-      "options": ["good"], // put answer string in array[0]
+      "options": ["good"], // put answer string in array[0]. If the answer is english, please make it all uppercase. 
       "timeLimit": 10, // only 10, 20, 30, 60, 90, 120, 180
       "title": "How are you?", //question (Don't over 40 letters)
       "type": "sa"
