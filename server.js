@@ -24,7 +24,7 @@ const defaultPrompt = ({
   queryOwnerName,
   queryTheme,
 }) => `Please generate ${queryQuantity} ${(queryQuantity) =>
-  queryQuantity === "one" ? "question" : "questions"}.
+  queryQuantity === "1" ? "question" : "questions"}.
 The theme of the question bank is: ${queryTheme}
 
 If the question bank is in Chinese, please use Traditional Chinese instead of Simplified Chinese.
