@@ -23,7 +23,8 @@ const defaultPrompt = ({
   queryOwner,
   queryOwnerName,
   queryTheme,
-}) => `Please generate ${queryQuantity} questions.
+}) => `Please generate ${queryQuantity} ${(queryQuantity) =>
+  queryQuantity === "one" ? "question" : "questions"}.
 The theme of the question bank is: ${queryTheme}
 
 If the question bank is in Chinese, please use Traditional Chinese instead of Simplified Chinese.
@@ -74,12 +75,22 @@ The format is as follows:
 
 `;
 
-// const corsOptions = {
-//   origin: "http://localhost:5173",
-//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+const corsOptions = {
+  origin: (origin, callback) => {
+    const allowedOrigins = [
+      "http://localhost:5173",
+      "https://loody-ing.web.app/",
+    ];
+    if (allowedOrigins.includes(origin) || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.get("/openai/:uuid", async (req, res) => {
   try {
