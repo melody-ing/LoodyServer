@@ -80,6 +80,7 @@ const corsOptions = {
     const allowedOrigins = [
       "http://localhost:5173",
       "https://loody-ing.web.app/",
+      "https://loody-ing.web.app/aigenerate",
     ];
     if (allowedOrigins.includes(origin) || !origin) {
       callback(null, true);
