@@ -74,23 +74,14 @@ The format is as follows:
 
 `;
 
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     const allowedOrigins = [
-//       "http://localhost:5173",
-//       "https://loody-ing.web.app/",
-//       "https://loody-ing.web.app/aigenerate",
-//     ];
-//     if (allowedOrigins.includes(origin) || !origin) {
-//       callback(null, true);
-//     } else {
-//       callback(new Error("Not allowed by CORS"));
-//     }
-//   },
-//   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
-// };
+const corsOptions = {
+  origin: ["https://loody-ing.web.app/", "http://localhost:5173"],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+};
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 app.get("/openai/:uuid", async (req, res) => {
   try {
