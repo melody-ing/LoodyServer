@@ -103,7 +103,7 @@ app.get("/openai/:uuid", async (req, res) => {
           }),
         },
       ],
-      model: "gpt-4o",
+      model: "gpt-4",
     });
     const docRef = db.collection("qbank").doc(paramsUUID);
     await docRef.set(JSON.parse(completion.choices[0].message.content));
