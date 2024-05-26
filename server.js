@@ -74,19 +74,19 @@ The format is as follows:
 
 `;
 
-// const corsOptions = {
-//   origin: [
-//     "https://loody-ing.web.app/",
-//     "https://loody.site/",
-//     "http://localhost:5173",
-//   ],
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-//   allowedHeaders: ["Content-Type", "Authorization"],
-//   optionsSuccessStatus: 200,
-// };
+const corsOptions = {
+  origin: [
+    "https://loody-ing.web.app/",
+    "https://loody.site/",
+    "http://localhost:5173",
+  ],
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  optionsSuccessStatus: 200,
+};
 
-// app.use(cors(corsOptions));
-app.use();
+app.use(cors(corsOptions));
+// app.use(cors());
 
 app.get("/openai/:uuid", async (req, res) => {
   try {
