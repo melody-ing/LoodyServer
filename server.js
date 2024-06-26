@@ -3,6 +3,7 @@ import { OpenAI } from "openai";
 import cors from "cors";
 import "dotenv/config";
 import admin from "firebase-admin";
+import rateLimit from "express-rate-limit";
 
 const app = express();
 const port = 3000;
@@ -75,13 +76,25 @@ The format is as follows:
 `;
 
 const corsOptions = {
-  origin: ["https://loody-ing.web.app", "https://loody.site"],
+  origin: [
+    "https://loody-ing.web.app",
+    "https://loody.site",
+    "http://localhost:5173",
+  ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
   optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
+
+const limiter = rateLimit({
+  windowMs: 1 * 60 * 60 * 1000,
+  limit: 5,
+  message: "Too many requests, please try again later.",
+  keyGenerator: (req, res) => req.query.owner,
+});
+app.use(limiter);
 
 app.get("/openai/:uuid", async (req, res) => {
   try {
@@ -90,6 +103,7 @@ app.get("/openai/:uuid", async (req, res) => {
     const queryOwnerName = req.query.ownerName;
     const queryTheme = req.query.theme;
     const queryQuantity = req.query.quantity;
+
     const completion = await openai.chat.completions.create({
       messages: [
         {
@@ -107,14 +121,6 @@ app.get("/openai/:uuid", async (req, res) => {
     });
     const docRef = db.collection("qbank").doc(paramsUUID);
     await docRef.set(JSON.parse(completion.choices[0].message.content));
-    console.log(completion.choices[0].message.content);
-    console.log(
-      queryQuantity,
-      paramsUUID,
-      queryOwner,
-      queryOwnerName,
-      queryTheme
-    );
     res.status(200).json({ message: completion.choices[0].message.content });
   } catch (err) {
     res.status(500).json({ error: err.message });
