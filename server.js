@@ -79,7 +79,7 @@ const corsOptions = {
   origin: [
     "https://loody-ing.web.app",
     "https://loody.site",
-    "http://localhost:5173",
+    // "http://localhost:5173",
   ],
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
   allowedHeaders: ["Content-Type", "Authorization"],
@@ -122,6 +122,7 @@ app.get("/openai/:uuid", async (req, res) => {
     const docRef = db.collection("qbank").doc(paramsUUID);
     await docRef.set(JSON.parse(completion.choices[0].message.content));
     res.status(200).json({ message: completion.choices[0].message.content });
+    console.log(completion.choices[0].message.content);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
